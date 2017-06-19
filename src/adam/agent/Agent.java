@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 
 class Agent {
 
@@ -12,13 +11,13 @@ class Agent {
     byte _destID;
     byte _type;
 
-    DatagramSocket _sock;
+    private DatagramSocket _sock;
     boolean _running = true;
 
     private final String _host;
     private final int _port;
 
-    Agent(DatagramSocket sock, String host, int port, byte ID) throws SocketException {
+    Agent(DatagramSocket sock, String host, int port, byte ID) {
             this._sock = sock;
             this._host = host;
             this._port = port;
@@ -54,7 +53,7 @@ class Agent {
     }
 
     void terminate() {
-        _running = false;
+        this._running = false;
     }
 
 }

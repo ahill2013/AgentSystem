@@ -1,12 +1,11 @@
 package adam.agent;
 
 import java.net.DatagramSocket;
-import java.net.SocketException;
 import java.util.Arrays;
 
 public class PongAgent extends Agent implements Runnable {
 
-    PongAgent(DatagramSocket sock, String host, int port, byte ID) throws SocketException {
+    PongAgent(DatagramSocket sock, String host, int port, byte ID) {
         super(sock, host, port, ID);
         this._type = 0;
     }

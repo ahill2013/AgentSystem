@@ -2,10 +2,7 @@ package adam.agent;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Message format should be byte[]{fromID, destID, msgType}
@@ -15,15 +12,13 @@ public class AgentHandler implements Runnable {
     private static final int BUFFER_SIZE = 3;
 
     private String IP = getLAN();
-    private final int ping_port = 2135;
-    private final int pong_port = 2133;
-    private final int server_port = 4446;
     private byte agentType;
     private boolean _running = true;
 
-    private HashMap<Byte, String> agentTable = new HashMap<>();
-    private List<String> pingList;
-    private List<String> pongList;
+    private HashMap<Byte, String> ipTable = new HashMap<>();
+    private HashMap<Byte, Integer> portTable = new HashMap<>();
+    private List<Byte> pingList = new LinkedList<>();
+    private List<Byte> pongList = new LinkedList<>();
 
     AgentHandler(byte type) {
         this.agentType = type;
@@ -55,29 +50,55 @@ public class AgentHandler implements Runnable {
 //            for (int i=0; i<data[1]; i++) {
 //
 //            }
+            // hard code Agents for now
+//            ipTable.put(uniqueID, this.IP);
+            ipTable.put((byte) 5, this.IP);
+            portTable.put((byte) 5, 2133);
+            pongList.add((byte) 5);
+            ipTable.put((byte) 2, this.IP);
+            portTable.put((byte) 2, 2132);
+            pongList.add((byte) 2);
+            ipTable.put((byte) 11, this.IP);
+            portTable.put((byte) 11, 2134);
+            pongList.add((byte) 11);
 
             // TODO: add unique ID to HashMap and start a new agent with that ID, based on agentType
             Thread agent = null;
+
+            int ping_port = 2135;
+            int pingserver_port = 4446;
+            int pong_port = 2134;
+            int pongserver_port = 4445;
+
+            byte uniqueID = (byte) (ipTable.size() + 1);
+            uniqueID = (byte) 4;
+
             if (agentType == 1) {
-                sock = new DatagramSocket(4444);
-                agent = new Thread(new PingAgent(sock, this.IP, this.ping_port, (byte) (agentTable.size() + 1)));
+                sock = new DatagramSocket(ping_port);
+//                portTable.put(uniqueID, ping_port);
+//                pingList.add(uniqueID);
+                agent = new Thread(new PingAgent(sock, this.IP, pingserver_port, uniqueID));
+                sock = new DatagramSocket(pingserver_port);
             } else if (agentType == 0) {
-                sock = new DatagramSocket(4446);
-                agent = new Thread(new PongAgent(sock, this.IP, this.pong_port, (byte) (agentTable.size() + 1)));
+                sock = new DatagramSocket(pong_port);
+//                portTable.put(uniqueID, pong_port);
+//                pongList.add(uniqueID);
+                agent = new Thread(new PongAgent(sock, this.IP, pongserver_port, uniqueID));
+                sock = new DatagramSocket(pongserver_port);
             }
             if (agent == null) {
                 System.err.println("Agent thread is null");
                 System.exit(-3);
             }
-            agentTable.put((byte) (agentTable.size() + 1), this.IP);
+            //ipTable.put((byte) (ipTable.size() + 1), this.IP);
             agent.start();
 
-            // hard code PongAgent as id=5 and id=2
-            agentTable.put((byte) 5, this.IP);
-            agentTable.put((byte) 2, this.IP);
-            System.out.println(agentTable.toString());
+            System.out.println(ipTable.toString());
 
-            while (_running) {
+            //for (int i=0; i<pongList.size(); i++) {
+            while (this._running) {
+                if (Thread.interrupted()) terminate();
+
                 try {
                     // Receive
                     pack = new DatagramPacket(new byte[BUFFER_SIZE], BUFFER_SIZE);
@@ -85,16 +106,17 @@ public class AgentHandler implements Runnable {
                     // Interperet
                     byte[] data = pack.getData();
                     System.out.println("AgentHandler received packet. Data: " + Arrays.toString(data));
-                    InetAddress host = InetAddress.getByName(agentTable.get(data[1]));
+                    InetAddress host = InetAddress.getByName(ipTable.get(data[1]));
+                    Integer port = portTable.get(data[1]);
                     // Reply
-                    if (data[2] == 1)
-                        pack = new DatagramPacket(data, data.length, host, this.pong_port);
-                    else if (data[2] == 0)
-                        pack = new DatagramPacket(data, data.length, host, this.ping_port);
+                    if (data[2] == (byte) 1)
+                        pack = new DatagramPacket(data, data.length, host, ping_port);
+                    if (data[2] == (byte) 0)
+                        pack = new DatagramPacket(data, data.length, host, pong_port);
                     sock.send(pack);
-                    // Reset buffer to prevent overflow
-                    pack.setData(new byte[BUFFER_SIZE]);
 
+                    // Reset buffer
+                    pack.setData(new byte[BUFFER_SIZE]);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -137,7 +159,7 @@ public class AgentHandler implements Runnable {
      * Tell the program to stop running
      */
     private void terminate() {
-        _running = false;
+        this._running = false;
     }
 
 }
