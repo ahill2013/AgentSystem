@@ -12,7 +12,11 @@ public class PongAgent extends Agent implements Runnable {
 
     @Override
     public void run() {
-        Runtime.getRuntime().addShutdownHook(new Thread(this::terminate));
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                terminate();
+            }
+        });
 
         System.out.println("PongAgent[id=" + this._myID + "]: Waiting for pings...");
 

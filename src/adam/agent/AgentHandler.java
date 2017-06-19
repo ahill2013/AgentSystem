@@ -29,7 +29,11 @@ public class AgentHandler implements Runnable {
         try {
             DatagramSocket sock = null;
             DatagramPacket pack;
-            Runtime.getRuntime().addShutdownHook(new Thread(this::terminate));
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                public void run() {
+                    terminate();
+                }
+            });
 
             // TODO: send broadcast and listen for replies. IF any replies, add to the HashMap
 //            try {
