@@ -40,11 +40,3 @@ public class AgentSystem {
         }
     }
 }
-
-/*
-    Start system
-    look for other systems on LAN
-    if no systems, start agent and give first unique ID
-    if systems, copy shared ID list and start new agent with unique ID
-    broadcast/share new unique ID with other systems
- */

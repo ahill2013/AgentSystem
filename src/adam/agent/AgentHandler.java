@@ -71,13 +71,14 @@ public class AgentHandler implements Runnable {
             // TODO: add unique ID to HashMap and start a new agent with that ID, based on agentType
             Thread agent = null;
 
+            // Hard code ports here for now. Change if you want to start more than one instance of an agent
             int ping_port = 2135;
             int pingserver_port = 4446;
             int pong_port = 2133;
             int pongserver_port = 4444;
 
             byte uniqueID = (byte) (ipTable.size() + 1);
-            uniqueID = (byte) 4;
+            uniqueID = (byte) 4; // Hard code unique ID here for now
 
             if (agentType == 1) {
                 sock = new DatagramSocket(ping_port);
@@ -99,8 +100,10 @@ public class AgentHandler implements Runnable {
             ipTable.put(uniqueID, this.IP);
             agent.start();
 
-            System.out.println(ipTable.toString());
-            System.out.println(portTable.toString());
+//            System.out.println(ipTable.toString());
+//            System.out.println(portTable.toString());
+
+//------------------------------------------------------------------------------------------
 
             //for (int i=0; i<pongList.size(); i++) {
             while (this._running) {
@@ -112,7 +115,7 @@ public class AgentHandler implements Runnable {
                     sock.receive(pack);
                     // Interperet
                     byte[] data = pack.getData();
-                    System.out.println("AgentHandler received packet. Data: " + Arrays.toString(data));
+//                    System.out.println("AgentHandler received packet. Data: " + Arrays.toString(data));
                     InetAddress host = InetAddress.getByName(ipTable.get(data[1]));
                     Integer port = portTable.get(data[1]);
                     // Reply
@@ -135,6 +138,11 @@ public class AgentHandler implements Runnable {
         }
     }
 
+    /**
+     * Finds the LAN IP address of the system, commonly 192.168.xxx.xxx, however this may not be the case with a
+     * customized network setup.
+     * @return a string containing the LAN IP address of the system
+     */
     private String getLAN() {
         String IP_address = "";
         int count = 0 ;

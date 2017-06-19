@@ -1,7 +1,6 @@
 package adam.agent;
 
 import java.net.DatagramSocket;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class PingAgent extends Agent implements Runnable {
@@ -32,7 +31,7 @@ public class PingAgent extends Agent implements Runnable {
             }
             for (int i=0; i<pongAgentList.size(); i++) {
                 byte[] data = this.recvMsg();
-                System.out.println("PingAgent received packet. Data: " + Arrays.toString(data));
+//                System.out.println("PingAgent received packet. Data: " + Arrays.toString(data));
                 if (data[1] == this._myID && data[2] != this._type)
                     System.out.println("PingAgent[id=" + this._myID + "]: Received pong from PongAgent[id=" + data[0] + "]");
             }
@@ -43,7 +42,7 @@ public class PingAgent extends Agent implements Runnable {
 
     private boolean lookForAgents() {
         // TODO: actually look for agents
-        this.pongAgentList.put((byte) 2, "192.168.0.11");
+        this.pongAgentList.put((byte) 5, "163.118.38.196");
 //        this.pongAgentList.put((byte) 5, "192.168.0.11");
 //        this.pongAgentList.put((byte) 11, "192.168.0.11");
         return true;

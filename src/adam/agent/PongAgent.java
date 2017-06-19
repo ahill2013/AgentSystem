@@ -1,7 +1,6 @@
 package adam.agent;
 
 import java.net.DatagramSocket;
-import java.util.Arrays;
 
 public class PongAgent extends Agent implements Runnable {
 
@@ -23,7 +22,7 @@ public class PongAgent extends Agent implements Runnable {
         while (this._running) {
             if (Thread.interrupted()) terminate();
             byte[] data = this.recvMsg();
-            System.out.println("PongAgent received packet. Data: " + Arrays.toString(data));
+//            System.out.println("PongAgent received packet. Data: " + Arrays.toString(data));
             if (data[1] == this._myID && data[2] != this._type) {
                 this._destID = data[0];
                 System.out.println("PongAgent[id=" + this._myID + "]: Received ping from PingAgent[id=" + this._destID + "]");

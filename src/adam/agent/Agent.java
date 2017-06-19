@@ -17,6 +17,13 @@ class Agent {
     private final String _host;
     private final int _port;
 
+    /**
+     * Base class constructor for an agent
+     * @param sock socket for UDP that listens on a specific port for packets
+     * @param host IP address of the system
+     * @param port port number open on the system. Send all packets here
+     * @param ID unique ID of an agent
+     */
     Agent(DatagramSocket sock, String host, int port, byte ID) {
             this._sock = sock;
             this._host = host;
@@ -24,6 +31,10 @@ class Agent {
             this._myID = ID;
     }
 
+    /**
+     * Sends a message to the system
+     * @param message data to be sent
+     */
     void sendMsg(byte[] message) {
         if (this._sock == null) {
             System.err.println("ERROR: sock is null");
@@ -40,6 +51,10 @@ class Agent {
         }
     }
 
+    /**
+     * Listens and waits for a message to be received on the socket's port
+     * @return byte[] of data that was received
+     */
     byte[] recvMsg() {
         try {
             byte[] buffer = new byte[3];
@@ -52,6 +67,9 @@ class Agent {
         return null;
     }
 
+    /**
+     * Tell the program to stop running
+     */
     void terminate() {
         this._running = false;
     }
