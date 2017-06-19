@@ -51,24 +51,26 @@ public class AgentHandler implements Runnable {
 //
 //            }
             // hard code Agents for now
-//            ipTable.put(uniqueID, this.IP);
             ipTable.put((byte) 5, this.IP);
             portTable.put((byte) 5, 2133);
             pongList.add((byte) 5);
-            ipTable.put((byte) 2, this.IP);
-            portTable.put((byte) 2, 2132);
-            pongList.add((byte) 2);
-            ipTable.put((byte) 11, this.IP);
-            portTable.put((byte) 11, 2134);
-            pongList.add((byte) 11);
+//            ipTable.put((byte) 2, this.IP);
+//            portTable.put((byte) 2, 2132);
+//            pongList.add((byte) 2);
+//            ipTable.put((byte) 11, this.IP);
+//            portTable.put((byte) 11, 2134);
+//            pongList.add((byte) 11);
+            ipTable.put((byte) 4, this.IP);
+            portTable.put((byte) 4, 2135);
+            pingList.add((byte) 4);
 
             // TODO: add unique ID to HashMap and start a new agent with that ID, based on agentType
             Thread agent = null;
 
             int ping_port = 2135;
             int pingserver_port = 4446;
-            int pong_port = 2134;
-            int pongserver_port = 4445;
+            int pong_port = 2133;
+            int pongserver_port = 4444;
 
             byte uniqueID = (byte) (ipTable.size() + 1);
             uniqueID = (byte) 4;
@@ -90,10 +92,11 @@ public class AgentHandler implements Runnable {
                 System.err.println("Agent thread is null");
                 System.exit(-3);
             }
-            //ipTable.put((byte) (ipTable.size() + 1), this.IP);
+            ipTable.put(uniqueID, this.IP);
             agent.start();
 
             System.out.println(ipTable.toString());
+            System.out.println(portTable.toString());
 
             //for (int i=0; i<pongList.size(); i++) {
             while (this._running) {
@@ -110,9 +113,9 @@ public class AgentHandler implements Runnable {
                     Integer port = portTable.get(data[1]);
                     // Reply
                     if (data[2] == (byte) 1)
-                        pack = new DatagramPacket(data, data.length, host, ping_port);
+                        pack = new DatagramPacket(data, data.length, host, port);
                     if (data[2] == (byte) 0)
-                        pack = new DatagramPacket(data, data.length, host, pong_port);
+                        pack = new DatagramPacket(data, data.length, host, port);
                     sock.send(pack);
 
                     // Reset buffer

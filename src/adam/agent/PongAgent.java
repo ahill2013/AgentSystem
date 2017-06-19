@@ -23,7 +23,7 @@ public class PongAgent extends Agent implements Runnable {
             if (data[1] == this._myID && data[2] != this._type) {
                 this._destID = data[0];
                 System.out.println("PongAgent[id=" + this._myID + "]: Received ping from PingAgent[id=" + this._destID + "]");
-                System.out.println("PongAgent[id=" + this._myID + "]: Sending pong to PongAgent[id=" + this._destID + "]");
+                System.out.println("PongAgent[id=" + this._myID + "]: Sending pong to PingAgent[id=" + this._destID + "]");
                 this.sendMsg(new byte[]{this._myID, this._destID, this._type});
             }
         }
