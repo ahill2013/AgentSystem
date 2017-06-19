@@ -16,7 +16,7 @@ public class AgentSystem {
         // Handle command line arguments
         // TODO: Add more robust argument handling/parsing
         if (args.length != 1) {
-            System.err.println("Usage: java AgentSystem <agent class>");
+            System.err.println("Usage: java AgentSystem.sh <agent class>");
             System.exit(-1);
         } else {
             if (args[0].equals("PingAgent"))

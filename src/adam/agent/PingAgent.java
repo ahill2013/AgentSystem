@@ -39,8 +39,8 @@ public class PingAgent extends Agent implements Runnable {
 
     private boolean lookForAgents() {
         // TODO: actually look for agents
-//        this.pongAgentList.put((byte) 2, "192.168.0.11");
-        this.pongAgentList.put((byte) 5, "192.168.0.11");
+        this.pongAgentList.put((byte) 2, "192.168.0.11");
+//        this.pongAgentList.put((byte) 5, "192.168.0.11");
 //        this.pongAgentList.put((byte) 11, "192.168.0.11");
         return true;
     }
